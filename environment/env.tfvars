@@ -71,11 +71,35 @@ shared_sg_tag_role="shared-web-to-app-alb-sg"
 #_______shared web to db sg_______
 web_to_db_sg_name ="dev-shared-web-to-db-sg"
 shared_sg_db_tag_role= "shared-web-to-db-sg"
-#_______shared web alb to web asg sg_____
-shared_web_to_alb
-
-
-
-
+#_______shared web alb to web asg sg___
+web_alb_to_web_asg_sg = "dev-shared-web-alb-to-web-asg_sg"
+web_alb_to_web_asg_sg_description = "Web ALB And Web ASG Circular Dependency Management."
+web_alb_to_web_asg_sg_tag_role = "dev-shared-web-alb-to-web-asg_sg"
+#____________Shared App ALB To App ASG Security Group
+app_alb_to_app_asg_sg = "dev-shared-app-alb-to-app-asg_sg"
+app_alb_to_app_asg_sg_description = "App ALB And App ASG Circular Dependency Management."
+app_alb_to_app_asg_sg_tag_role = "dev-shared-app-alb-to-app-asg-sg"
+#_________shared mirror db sg______________
+db_mirroring_sg_name = "dev-shared-db-mirroring-sg"
+db_mirroring_sg_description = "DB Mirroring Security Group"
+db_mirroring_sg_tag_role = "dev-shared-db-mirroring-sg"
+#______________________Web & ALB Security Group Configuration___________________
+#___________Web ALB Security Group
+web_alb_sg_name = "web-alb-sg"
+web_alb_sg_description = "Web ALB External Dependecy Connectivity."
+web_alb_sg_tag_role = "dev-web-alb-sg" 
+#___________Web Security Group
+web_sg_name = "web-sg"
+web_sg_description = "Web ASG External Dependecy Connectivity."
+web_sg_tag_role = "dev-web-sg"
+#______________________App & ALB Security Group Configuration___________________
+#___________App ALB General Security Group
+app_alb_sg_name = "app-alb-sg"
+app_alb_sg_description = "App ALB External Dependecy Connectivity."
+app_alb_sg_tag_role = "dev-pp-alb-sg"
+#___________App Security Group
+app_sg_name = "app-sg"
+app_sg_description = "App ASG external Dependecy Connectivity."
+app_sg_tag_role = "dev-app-sg" 
 
 
