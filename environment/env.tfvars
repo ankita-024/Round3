@@ -13,7 +13,7 @@ db_sg = "db_sg"
 environment_tag = "dev"
 team_tag = "team_one"
 #____________________KMS_______________________
-kms_deployer_arn = "arn:aws:iam::        "
+kms_deployer_arn = "arn:aws:iam::us-east-1a-----------"
 #____________________AMIS_____________________
 web_ami = "web"
 app_ami = "app"
@@ -42,11 +42,7 @@ app_ou_path = "OU=fuew,OU=bbfwu,DC=hufewi"
 
 port_8080 = "8080"
 port_3912 = "3912"
-port_4401 = "4401"
-port_1455 = "1455"
-port_1180 = "1180"
 port_3175 = "3175"
-port_5985 = "5985"
 port_1415 = "1415" 
 port_3175 ="3175"
 port_3126 ="3126"
@@ -65,7 +61,7 @@ cidr_dev=""
 cidr_db_serv=""
 cidr_db_serv_dr=""
 #_________Shared SG config_______
-#_____shared web to app alb security grp
+#_____shared web to app internal alb sg______
 web_to_App_alb_shared_sg ="dev-shared-web-to-app-alb-sg"
 shared_sg_tag_role="shared-web-to-app-alb-sg"
 #_______shared web to db sg_______
@@ -83,7 +79,7 @@ app_alb_to_app_asg_sg_tag_role = "dev-shared-app-alb-to-app-asg-sg"
 db_mirroring_sg_name = "dev-shared-db-mirroring-sg"
 db_mirroring_sg_description = "DB Mirroring Security Group"
 db_mirroring_sg_tag_role = "dev-shared-db-mirroring-sg"
-#______________________Web & ALB Security Group Configuration___________________
+#______________________Web & ALB security Group Configuration___________________
 #___________Web ALB Security Group
 web_alb_sg_name = "web-alb-sg"
 web_alb_sg_description = "Web ALB External Dependecy Connectivity."
@@ -96,10 +92,121 @@ web_sg_tag_role = "dev-web-sg"
 #___________App ALB General Security Group
 app_alb_sg_name = "app-alb-sg"
 app_alb_sg_description = "App ALB External Dependecy Connectivity."
-app_alb_sg_tag_role = "dev-pp-alb-sg"
+app_alb_sg_tag_role = "dev-app-alb-sg"
 #___________App Security Group
 app_sg_name = "app-sg"
 app_sg_description = "App ASG external Dependecy Connectivity."
 app_sg_tag_role = "dev-app-sg" 
+#__________________________DB SG Config______________________
+db_sg_name = "db-sg"
+db_sg_description = "DB External Dependecy Connectivity."
+db_sg_tag_role = "dev_db_sg"
+db_sg = "db_sg"
+#______________________________Web ALB Config____________________________
+#____Web ALB Target Group General
+alb_is_internal = true
+tg_deregistration_delay = "300"
+tg_cookie_duration = "86400"
+tg_enable_stickiness = true
+#____Web ALB Target Group Health Check
+tg_healthy_threshold = "3"
+tg_unhealthy_threshold = "8" 
+tg_healthy_threshold_internal = "5"
+tg_unhealthy_threshold_internal = "5"
+tg_check_timeout = "30"
+tg_check_interval = "60"
+#____Web ALB Target Group
+service_int_name = "internal"
+tg_internal_health_check_path = "/myappbrowser"
+#____Web ALB Listener
+web_listener_ssl_policy = "ELBSecurityPolicy-2015-01"
+web_listener_certificate_arn = "arn:aws:acm:----------"
+idle_timeout = "300"
+#____Web ALB Listener Rules
+priority_internal = "2"
+listener_rule_field = "header-pattern"
+listener_rule_values_internal = "web-dev-alb.aws-useast1-np.myapp.com"
+#_______________________________Web ASG VarS_______________________________
+web_instance_type = "t3.medium"
+web_profile_arn = "myapp-web-a872eec50000"
+web_asg_namespace = "AWS/EC2"
+web_az_count = "2"
+web_asg_max_child = "3"
+web_asg_min_child = "2"
+web_health_check_grace_period = "600"
+web_health_check_type = "ELB"
+web_asg_evaluation_periods_so = "4"
+web_asg_evaluation_periods_si = "10"
+web_asg_period_so = "120"
+web_asg_period_si = "60"
+web_asg_threshold_so = "80"
+web_asg_threshold_si = "20"
+web_asg_metric_name = "CPUUtilization"
+web_asg_statistic = "Average"
+#______________________________Web ASG Scheduler Var____________________________
+web_scheduler_up_min_size = "2"
+web_scheduler_up_max_size = "3"
+web_scheduler_up_desired_capacity = "2"
+web_scheduler_up_recurrence = "00 2 * * 1-5"
+web_scheduler_down_min_size = "0"
+web_scheduler_down_max_size = "0"
+web_scheduler_down_desired_capacity = "0"
+web_scheduler_down_recurrence = "00 18 * * *" 
+#______________________________App ALB Configuration____________________________
+#____App LB Target Group
+app_tg_deregistration_delay = "60"
+app_tg_cookie_duration = "86400"
+app_tg_enable_stickiness = true
+app_alb_is_internal = true
+app_tg_9982_check_path = "/myapp/"
+app_tg_healthy_threshold = "2"
+app_tg_unhealthy_threshold = "10"
+app_tg_check_timeout = "60"
+app_tg_check_interval = "61"
+app_service_name_9982 = "myapp9982-1"
+#____App LB Listener
+app_listener_ssl_policy = "ELBSecurityPolicy-2015-03"
+app_listener_certificate_arn = "arn:aws:acm:---------------"
+#____Application Load Balancer Listener Rules
+app_priority = "2"
+app_listener_rule_field = "path-header"
+app_listener_rule_values_9443 = "/myapp"
+#_______________________________App ASG Variables_______________________________
+app_instance_type = "t3.medium"
+app_profile_arn = "myapp-1cafuuuuuuf344"
+app_profile_name = "myapp-00yyyyyed3f4"
+app_asg_namespace = "AWS/EC2"
+app_az_count = "2"
+app_asg_max_child = "3"
+app_asg_min_child = "2"
+app_ebs_optimized = "false"
+app_volume_size = "50"
+app_trend_policy_id = "21"
+app_health_check_grace_period = "1200"
+app_health_check_type = "ELB"
+app_asg_evaluation_periods_so = "4"
+app_asg_evaluation_periods_si = "10"
+app_asg_period_so = "120"
+app_asg_period_si = "60"
+app_asg_threshold_so = "80"
+app_asg_threshold_si = "20"
+app_asg_metric_name = "CPUUtilization"
+app_asg_statistic = "Average" 
+ 
+
+ 
+
+ 
+
+
+ 
+
+
+
+ 
+ 
+
+
+ 
 
 
