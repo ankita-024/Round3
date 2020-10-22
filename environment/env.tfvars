@@ -130,6 +130,7 @@ listener_rule_values_internal = "web-dev-alb.aws-useast1-np.myapp.com"
 web_instance_type = "t3.medium"
 web_profile_arn = "myapp-web-a872eec50000"
 web_asg_namespace = "AWS/EC2"
+asg_web_name = "myapp-web-dev"
 web_az_count = "2"
 web_asg_max_child = "3"
 web_asg_min_child = "2"
@@ -176,6 +177,7 @@ app_instance_type = "t3.medium"
 app_profile_arn = "myapp-1cafuuuuuuf344"
 app_profile_name = "myapp-00yyyyyed3f4"
 app_asg_namespace = "AWS/EC2"
+asg_app_name = "asg-app-dev" 
 app_az_count = "2"
 app_asg_max_child = "3"
 app_asg_min_child = "2"
@@ -192,21 +194,53 @@ app_asg_threshold_so = "80"
 app_asg_threshold_si = "20"
 app_asg_metric_name = "CPUUtilization"
 app_asg_statistic = "Average" 
- 
-
- 
-
- 
-
-
- 
-
-
-
- 
- 
-
-
- 
-
-
+#______________________________App ASG Scheduler Vars____________________________
+app_scheduler_up_min_size = "2"
+app_scheduler_up_max_size = "3"
+app_scheduler_up_desired_capacity = "2"
+app_scheduler_up_recurrence = "00 2 * * 1-5"
+app_scheduler_down_min_size = "0"
+app_scheduler_down_max_size = "0"
+app_scheduler_down_desired_capacity = "0"
+app_scheduler_down_recurrence = "00 18 * * *" 
+#______________________________DB Instance Vars____________________________
+#____________________EC2 GenConfig__________
+db_instance_type = "m4.xlarge"
+db_profile_arn = "db-o000007bee8u6"
+db_tag_PatchStrategy = "in-place"
+db_tag_role = "db_server"
+db_count = "1"
+#____________________EC2 EBS Volumes
+ebs_optimized = "true"
+device_name1 = "xbbb"
+device_name2 = "xyyy"
+device_name3 = "xiii"
+device_name4 = "xxxx"
+root_volume_size = "90"
+system_volume_size = "40"
+data_volume_size = "60"
+backup_volume_size = "90"
+tempdb_volume_size = "50"
+storage_type = "gp2"
+#___________________________________DNS Variables_______________________________
+hosted_zone_id = "YG2Y77BHDKCD"
+hosted_zone = "myapp.aws-use1-np.myapp.com"
+web_service_record_name = "web-dev-alb"
+service_record_name_app = "app-dev-alb"
+db_service_record_name = "db" 
+#_______________________________Cloudwatch Variables____________________________
+sns_topic_info = ""
+sns_topic_alert = ""
+sns_topic_db_info = ""
+sns_topic_db_alert = "" 
+#______________________________DB Cloudwatch Variables
+cpu_threshold_info = "75"
+cpu_threshold_action = "85"
+cpu_period = "300"
+memory_threshold_info = "75"
+memory_threshold_action = "85"
+memory_period = "300"
+diskspace_threshold = "20"
+diskspace_period = "300"
+inst_status_period = "1200"
+ebs_mounpoints_diskspace_threshold = "20"
