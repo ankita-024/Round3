@@ -113,7 +113,18 @@ resource "aws_lb_listener_rule" "app_alb_listener_rule" {
 } 
  
 #_________________________ASG_________________________________
+resource "aws_autoscaling_group" "asg" {
+  # ... other configuration ...
 
+  lifecycle {
+    ignore_changes = [load_balancers, target_group_arns]
+  }
+}
+
+resource "aws_autoscaling_attachment" "asg_attachment_bar" {
+  autoscaling_group_name = aws_autoscaling_group.asg.id
+  elb                    = aws_elb.test.id
+}
  
 
 
