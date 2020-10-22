@@ -1,0 +1,120 @@
+
+#______________________________________AMI______________________________________
+
+data "aws_ami" "app_ami" {
+  most_recent = true
+  filter {
+    name   = "tag:Name"
+    values = ["${var.app_ami_name}"]
+  }
+  filter {
+    name   = "tag:Lifecycle"
+    values = ["authorised"]
+  }
+} 
+#____________________________Data Source For User Data__________________________
+
+data "template" "userdata" {
+  template = "${file("${var.userdatatype}")}"
+
+  vars {
+    vault_environment       = "${var.tag_environment}"
+    tag_environment         = "${var.tag_environment}"
+    vault_addr              = "${var.vault_addr}"
+    vault_app_role          = "${var.vault_app_role}"
+    domain_join_user        = "${var.domain_join_user}"
+    domain_join_password    = "${var.domain_join_password}"
+    ou_path                 = "${var.app_ou_path}"
+    myappear_location       = "${var.myappear_location}"
+    asg_name                = "${var.asg_app_name}"
+    logs_bucket_name        = "${var.logs_bucket_name}"
+    no_proxy                = "${var.no_proxy}"
+    admin_group      = "${var.admin_group}"
+    developer_group  = "${var.developer_group}"
+  }
+}
+#____________________________Data Source For SG__________________________
+ 
+#____________________________Data Source For subnets_________________________
+
+#____________________________Application load balancer_________________________
+
+resource "aws_lb" "app_alb" {
+  provider = "aws.client"
+  security_groups            =  ["${data.terraform_remote_state.backend_sg.app_alb_sg_id}",
+    "${data.terraform_remote_state.shared_sg.shared_app_alb_to_app_asg_sg_id}",
+  ]
+  subnets                    = ["${data.aws_subnet.*.id}"]
+  load_balancer_type         = "application"
+  internal                   =  true
+  name                       = "${var.stack_name}-app-ALB-${var.tag_environment}"
+  idle_timeout               = "${var.idle_timeout}" 
+   tags {
+   Name                       = "${var.stack_name}-app-ALB-${var.tag_environment}"
+   tag_environment            = "${var.tag_environment}"
+   team                       = "${var.tag_team}"
+ }
+} 
+
+resource "aws_lb_target_group" "app_tg" {
+  provider ="aws.client"
+  vpc_id   = "${var.vpc_id}" 
+  name                       = "${var.stack_name}-app-ALB-TG-${var.tag_environment}"
+  port                       = "${var.port_7070}"                
+  protocol                   = "${var.protocol_http}"
+  deregistration_delay       = "${var.app_tg_deregistration_delay}"
+  stickiness {
+    type = "lb_cookie"
+    enabled = true
+    cookie_duration = "${var.app_tg_cookie_duration}"
+  }
+
+  health_check {
+    interval            = "${var.app_tg_check_interval}"
+    path                = ""
+    timeout             = ""
+    healthy_threshold   = "${var.app_tg_healthy_threshold}"
+    unhealthy_threshold = "${var.app_tg_unhealthy_threshold}"
+    matcher             = ""
+  }
+  tags {
+.....
+  }
+}  
+ 
+resource "aws_lb_listener" "app_alb_listener" {
+  provider = "aws.client"
+  load_balancer_arn = "${aws_lb.app_alb.arn}"
+  protocol          = "HTTPS"
+  port            = "${var.port_cccc}"
+  ssl_policy      = "${var.listener_ssl_policy}"
+  certificate_arn = "${var.listener_certificate_arn}"
+  default_action {
+    target_group_arn = "${aws_lb_target_group.app_tg.arn}"
+    type             = "forward"
+  }
+}
+
+resource "aws_lb_listener_rule" "app_alb_listener_rule" {
+  
+  provider = "aws.client"
+
+  listener_arn     = "${aws_lb_listener.app_alb_listener.arn}"
+  priority         = "${var.app_priority_9999}"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.app_tg.arn}"
+  }
+  condition {
+    field  = "${var.app_listener_rule_field}"
+    values = ["${var.app_listener_rule_values}"]
+  }
+} 
+ 
+#_________________________ASG_________________________________
+
+ 
+
+
+ 
