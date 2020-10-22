@@ -126,6 +126,24 @@ resource "aws_autoscaling_attachment" "asg_attachment_bar" {
   elb                    = aws_elb.test.id
 }
  
+resource "aws_autoscaling_schedule" "app_scheduler_up" {
+  provider = "aws.client"
+  scheduled_action_name  = "app_scheduler_up"
+  min_size               = "${var.app_scheduler_up_min_size}"
+  max_size               = "${var.app_scheduler_up_max_size}"
+  desired_capacity       = "${var.app_scheduler_up_desired_capacity}"
+  recurrence             = "${var.app_scheduler_up_recurrence}"
+  autoscaling_group_name = "${data.terraform_remote_state.backend.asg_name}"
+} 
 
+resource "aws_autoscaling_schedule" "app_scheduler_down" {
+  provider = "aws.client"
+  scheduled_action_name  = "app_scheduler_down"
+   min_size               = "${var.app_scheduler_down_min_size}"
+  max_size               = "${var.app_scheduler_down_max_size}"
+  desired_capacity       = "${var.app_scheduler_down_desired_capacity}"
+  recurrence             = "${var.app_scheduler_down_recurrence}"
+  autoscaling_group_name = "${data.terraform_remote_state.backend.asg_name}"
+} 
 
  
