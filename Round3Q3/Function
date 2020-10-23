@@ -1,1 +1,27 @@
-
+<!DOCTYPE html>
+<html>
+<body>
+<h2>JavaScript Function</h2>
+<p>Click the button to extract characters from the string</p>
+<button onclick="myFunction()">Try it</button>
+<p id="demo"></p>
+<script>
+var obj = {"x":{"y":{"z":"a"}}};
+function myFunction(obj, key){
+if (obj && typeof obj == "object" && key && key !=null && key !==""){
+    var allKeys = key.split("/");
+    var temp = obj;
+    allKeys.map((item) => {
+    temp = temp[item];
+    if (typeof temp == "undefined" || temp == null){
+     return "";
+     }
+     });
+     return temp;
+     }
+     return "";
+     }
+document.getElementById("demo").innerHTML = myFunction(obj, "x/y/z");
+</script>
+</body>
+</html>
